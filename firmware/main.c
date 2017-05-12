@@ -45,6 +45,7 @@ static unsigned int prog_pagesize;
 static uchar prog_blockflags;
 static uchar prog_pagecounter;
 
+static uchar random_int = 0;
 
 
 ISR(SPI_STC_vect, ISR_NOBLOCK)
@@ -223,7 +224,11 @@ uchar usbFunctionSetup(uchar data[8]) {
 			comStart ++;
 			len ++;
 		}
-	}
+	} else if (data[i] == USBASP_FUNC_READ_RANDOM) {
+        for (len = 0; len < 8; len++) {
+            replyBuffer[len] = random_int++;
+        }
+    }
 
 	usbMsgPtr = replyBuffer;
 
